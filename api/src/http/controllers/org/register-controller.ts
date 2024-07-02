@@ -1,6 +1,6 @@
-import { prisma } from '../../../lib/database'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
+import { createOrgService } from '../../../services/register-org-service'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const registerBodySchema = z.object({
@@ -27,8 +27,8 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     neighborhood,
     state,
   } = registerBodySchema.parse(request.body)
-  await prisma.organization.create({
-    data: {
+  try {
+    await createOrgService({
       name,
       whatsapp,
       password,
@@ -39,7 +39,10 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       number,
       neighborhood,
       state,
-    },
-  })
+    })
+  } catch (err) {
+    return reply.status(409).send()
+  }
+
   reply.status(201).send()
 }

@@ -1,5 +1,3 @@
-import { prisma } from '../lib/database'
-
 interface RegisterServiceRequest {
   name: string
   whatsapp: string
@@ -12,28 +10,22 @@ interface RegisterServiceRequest {
   neighborhood: string
   state: string
 }
-export async function createOrgService({
-  name,
-  whatsapp,
-  password,
-  email,
-  cep,
-  city,
-  street,
-  number,
-  neighborhood,
-  state,
-}: RegisterServiceRequest) {
-  const orgWithSameEmail = await prisma.organization.findUnique({
-    where: {
-      email,
-    },
-  })
-  if (orgWithSameEmail) {
-    throw new Error('there is already a Organization with this E-mail')
-  }
-  const organization = await prisma.organization.create({
-    data: {
+export class RegisterOrganizationService {
+  constructor(private organizationRepository: any) {}
+
+  async execute({
+    name,
+    whatsapp,
+    password,
+    email,
+    cep,
+    city,
+    street,
+    number,
+    neighborhood,
+    state,
+  }: RegisterServiceRequest) {
+    await this.organizationRepository.create({
       name,
       whatsapp,
       password,
@@ -44,7 +36,6 @@ export async function createOrgService({
       number,
       neighborhood,
       state,
-    },
-  })
-  return { organization }
+    })
+  }
 }

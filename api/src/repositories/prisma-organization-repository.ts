@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client'
 import { prisma } from '../lib/database'
+import { OrganizationAlreadyExistsError } from '../services/errors/organization-already-exists'
 
 export class PrismaOrganizationRepository {
   async verify(data: Prisma.OrganizationCreateInput) {
@@ -10,7 +11,7 @@ export class PrismaOrganizationRepository {
       },
     })
     if (orgWithSameEmail) {
-      throw new Error('there is already a Organization with this E-mail')
+      throw new OrganizationAlreadyExistsError()
     }
   }
 

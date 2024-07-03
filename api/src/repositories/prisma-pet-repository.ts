@@ -10,7 +10,7 @@ export interface CreatePetArg {
 
 export class PrismaPetRepository {
   async getPetDetails(id: string) {
-    const petToShow = await prisma.pet.findFirst({ where: { id } })
+    const petToShow = await prisma.pet.findFirstOrThrow({ where: { id } })
     return petToShow
   }
 

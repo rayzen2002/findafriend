@@ -1,3 +1,5 @@
+import { PrismaOrganizationRepository } from '../repositories/prisma-organization-repository'
+
 interface RegisterServiceRequest {
   name: string
   whatsapp: string
@@ -11,7 +13,7 @@ interface RegisterServiceRequest {
   state: string
 }
 export class RegisterOrganizationService {
-  constructor(private organizationRepository: any) {}
+  constructor(private organizationRepository: PrismaOrganizationRepository) {}
 
   async execute({
     name,

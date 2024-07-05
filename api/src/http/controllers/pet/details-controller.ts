@@ -6,10 +6,15 @@ import { GetDetailsOfPetService } from '../../../services/get-details-pet-servic
 export async function details(request: FastifyRequest, reply: FastifyReply) {
   const detailsParamsSchema = z.object({
     petId: z.coerce.string().uuid(),
+    city: z.string(),
   })
-  const { petId } = detailsParamsSchema.parse(request.params)
+  const { petId, city } = detailsParamsSchema.parse(request.params)
 
   const prismaPetRepository = new PrismaPetRepository()
+  const findPetCity = await prismaPetRepository.findPetCity(petId)
+  if (city !== findPetCity) {
+    return reply.status(404).send('Invalid City')
+  }
   const getDetailsOfPetService = new GetDetailsOfPetService(prismaPetRepository)
   const pet = await getDetailsOfPetService.getDetailsOfPet(petId)
 

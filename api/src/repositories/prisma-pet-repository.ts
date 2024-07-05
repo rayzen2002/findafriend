@@ -9,6 +9,17 @@ export interface CreatePetArg {
 }
 
 export class PrismaPetRepository {
+  async findPetCity(petId: string) {
+    const pet = await prisma.pet.findFirst({
+      where: { id: petId },
+      include: {
+        Organization: true,
+      },
+    })
+
+    return pet?.Organization.city
+  }
+
   async getPetDetailsByCity(city: string) {
     const organizationsFromCity = await prisma.organization.findMany({
       where: { city },

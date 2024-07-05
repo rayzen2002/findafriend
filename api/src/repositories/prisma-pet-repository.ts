@@ -9,6 +9,20 @@ export interface CreatePetArg {
 }
 
 export class PrismaPetRepository {
+  async getPetDetailsByCity(city: string) {
+    const organizationsFromCity = await prisma.organization.findMany({
+      where: { city },
+      include: { pets: true },
+    })
+    console.log(organizationsFromCity)
+    if (organizationsFromCity.length === 0) {
+      throw new Error('There is no Organizations on this city')
+    }
+    const allPetsFromCity = organizationsFromCity.flatMap((org) => org.pets)
+
+    return allPetsFromCity
+  }
+
   async getPetDetails(id: string) {
     const petToShow = await prisma.pet.findFirstOrThrow({ where: { id } })
     return petToShow

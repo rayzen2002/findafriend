@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { prisma } from '../lib/database'
 
 export interface CreatePetArg {
@@ -6,6 +7,12 @@ export interface CreatePetArg {
   age: number
   type: string
   organizationId: string
+}
+export interface PetQueryParams {
+  name?: string
+  race?: string
+  age?: number
+  type?: string
 }
 
 export class PrismaPetRepository {
@@ -25,13 +32,26 @@ export class PrismaPetRepository {
       where: { city },
       include: { pets: true },
     })
-    console.log(organizationsFromCity)
+
     if (organizationsFromCity.length === 0) {
       throw new Error('There is no Organizations on this city')
     }
     const allPetsFromCity = organizationsFromCity.flatMap((org) => org.pets)
 
     return allPetsFromCity
+  }
+
+  async getPetsByFilters(query: PetQueryParams, city: string) {
+    const petsWithFilters = await prisma.pet.findMany({
+      where: {
+        name: query.name,
+        type: query.type,
+        age: query.age,
+        race: query.race,
+        Organization: { city },
+      },
+    })
+    return petsWithFilters
   }
 
   async getPetDetails(id: string) {

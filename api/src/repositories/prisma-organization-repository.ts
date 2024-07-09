@@ -22,4 +22,13 @@ export class PrismaOrganizationRepository {
     })
     return organization
   }
+
+  async findByEmail(email: string) {
+    const orgWithThisEmail = await prisma.organization.findFirstOrThrow({
+      where: {
+        email,
+      },
+    })
+    return orgWithThisEmail
+  }
 }

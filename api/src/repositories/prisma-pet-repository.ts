@@ -16,6 +16,16 @@ export interface PetQueryParams {
 }
 
 export class PrismaPetRepository {
+  async adoptPet(petId: string) {
+    const pet = await prisma.pet.findFirst({
+      where: { id: petId },
+      include: {
+        Organization: true,
+      },
+    })
+    return pet?.Organization.whatsapp
+  }
+
   async findPetCity(petId: string) {
     const pet = await prisma.pet.findFirst({
       where: { id: petId },

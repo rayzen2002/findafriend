@@ -4,6 +4,7 @@ import { details } from './details-controller'
 import { detailsByCity } from './details-by-city-controller'
 import { detailsWithFilters } from './details-with-filters-controller'
 import { verifyJWT } from '../../middlewares/verifyjwt'
+import { petAdoption } from './pet-adoption'
 
 export async function petRoutes(app: FastifyInstance) {
   app.post(
@@ -14,4 +15,5 @@ export async function petRoutes(app: FastifyInstance) {
   app.get('/pets/:city/:petId', details)
   app.get('/pet/city/:city', detailsWithFilters)
   app.get('/pets/city/:city', detailsByCity)
+  app.post('/pet/adoption', petAdoption)
 }
